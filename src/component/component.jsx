@@ -16,12 +16,13 @@ import {
   Play,
   Pause,
   ZoomIn,
-  ZoomOut
+  ZoomOut,
+  Menu
 } from 'lucide-react';
 
 const basePath = "https://fastly-production.24c.in/webin/360";
 
-// Enhanced Image Carousel Component
+// Enhanced Mobile-First Image Carousel Component
 const ImageCarousel = ({ images, basePath }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isAutoPlay, setIsAutoPlay] = useState(false);
@@ -68,13 +69,14 @@ const ImageCarousel = ({ images, basePath }) => {
 
   return (
     <div 
-      className="relative bg-white/5 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/10"
+      className="relative bg-white/5 backdrop-blur-sm rounded-xl sm:rounded-2xl overflow-hidden border border-white/10"
       role="region" 
       aria-label="Car 360° Image Viewer" 
       aria-roledescription="carousel" 
       tabIndex={0}
     >
-      <div className="relative h-96 overflow-hidden bg-gray-800">
+      {/* Mobile-optimized image container */}
+      <div className="relative h-64 sm:h-80 md:h-96 overflow-hidden bg-gray-800">
         <img 
           src={carImages[currentImageIndex]}
           alt={`Car view ${currentImageIndex + 1} of ${carImages.length}`}
@@ -85,74 +87,74 @@ const ImageCarousel = ({ images, basePath }) => {
           }}
         />
         
-        {/* Navigation Arrows */}
+        {/* Mobile-optimized Navigation Arrows */}
         <button
           onClick={prevImage}
-          className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-white"
+          className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-1.5 sm:p-2 rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-white"
           aria-label="Previous image"
         >
-          <ChevronLeft size={24} />
+          <ChevronLeft size={20} className="sm:w-6 sm:h-6" />
         </button>
         
         <button
           onClick={nextImage}
-          className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-white"
+          className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-1.5 sm:p-2 rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-white"
           aria-label="Next image"
         >
-          <ChevronRight size={24} />
+          <ChevronRight size={20} className="sm:w-6 sm:h-6" />
         </button>
 
-        {/* Control Panel */}
-        <div className="absolute top-4 right-4 flex gap-2">
+        {/* Mobile-optimized Control Panel */}
+        <div className="absolute top-2 sm:top-4 right-2 sm:right-4 flex gap-1 sm:gap-2">
           <button
             onClick={() => setIsAutoPlay(prev => !prev)}
-            className="bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-white"
+            className="bg-black/50 hover:bg-black/70 text-white p-1.5 sm:p-2 rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-white"
             aria-label={isAutoPlay ? "Pause rotation" : "Start rotation"}
           >
-            {isAutoPlay ? <Pause size={16} /> : <Play size={16} />}
+            {isAutoPlay ? <Pause size={14} className="sm:w-4 sm:h-4" /> : <Play size={14} className="sm:w-4 sm:h-4" />}
           </button>
           
           <button
             onClick={() => setZoom(prev => Math.min(prev + 0.2, 3))}
-            className="bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-white"
+            className="bg-black/50 hover:bg-black/70 text-white p-1.5 sm:p-2 rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-white"
             aria-label="Zoom in"
             disabled={zoom >= 3}
           >
-            <ZoomIn size={16} />
+            <ZoomIn size={14} className="sm:w-4 sm:h-4" />
           </button>
           
           <button
             onClick={() => setZoom(prev => Math.max(prev - 0.2, 0.5))}
-            className="bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-white"
+            className="bg-black/50 hover:bg-black/70 text-white p-1.5 sm:p-2 rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-white"
             aria-label="Zoom out"
             disabled={zoom <= 0.5}
           >
-            <ZoomOut size={16} />
+            <ZoomOut size={14} className="sm:w-4 sm:h-4" />
           </button>
         </div>
 
-        {/* Progress Indicator */}
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 rounded-full px-3 py-1">
-          <span className="text-white text-sm">
+        {/* Progress Indicator - Mobile optimized */}
+        <div className="absolute bottom-2 sm:bottom-4 left-1/2 -translate-x-1/2 bg-black/50 rounded-full px-2 sm:px-3 py-1">
+          <span className="text-white text-xs sm:text-sm">
             {currentImageIndex + 1} / {carImages.length}
           </span>
         </div>
       </div>
 
-      {/* Thumbnail Navigation */}
-      <div className="flex gap-2 p-4 overflow-x-auto scrollbar-hide">
-        {carImages.slice(0, 10).map((_, index) => (
+      {/* Responsive Thumbnail Navigation */}
+      <div className="flex gap-1.5 sm:gap-2 p-2 sm:p-4 overflow-x-auto scrollbar-hide">
+        {carImages.slice(0, 8).map((_, index) => (
           <button
             key={index}
-            onClick={() => setCurrentImageIndex(index * 7)}
-            className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ${
-              Math.floor(currentImageIndex / 7) === index 
-                ? 'border-blue-400 ring-2 ring-blue-400/50' 
+            onClick={() => setCurrentImageIndex(index * 9)}
+            className={`flex-shrink-0 w-12 h-12 sm:w-16 sm:h-16 rounded-md sm:rounded-lg overflow-hidden border-2 transition-all ${
+              Math.floor(currentImageIndex / 9) === index 
+                ? 'border-blue-400 ring-1 sm:ring-2 ring-blue-400/50' 
                 : 'border-white/20 hover:border-white/40'
             }`}
           >
             <img 
-              src={carImages[index * 7]}
+              src={carImages[index * 9]}
               alt={`Thumbnail ${index + 1}`}
               className="w-full h-full object-cover"
             />
@@ -163,7 +165,7 @@ const ImageCarousel = ({ images, basePath }) => {
   );
 };
 
-// Enhanced EMI Calculator Modal
+// Enhanced Mobile-First EMI Calculator Modal
 const EMICalculatorModal = ({ onClose }) => {
   const [loanAmount, setLoanAmount] = useState(1060800);
   const [downPayment, setDownPayment] = useState(265200);
@@ -214,34 +216,38 @@ const EMICalculatorModal = ({ onClose }) => {
 
   return (
     <div 
-      className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4"
       role="dialog"
       aria-modal="true"
       aria-labelledby="emi-modal-title"
     >
       <div 
         ref={modalRef}
-        className="bg-white rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto focus:outline-none"
+        className="bg-white rounded-xl sm:rounded-2xl w-full max-w-sm sm:max-w-lg max-h-[90vh] overflow-y-auto focus:outline-none"
         tabIndex={-1}
       >
-        <div className="flex items-center justify-between p-6 border-b">
-          <h2 id="emi-modal-title" className="text-xl font-bold text-gray-900">
-            EMI Calculator & Eligibility
+        {/* Mobile-optimized header */}
+        <div className="flex items-center justify-between p-4 sm:p-6 border-b">
+          <h2 id="emi-modal-title" className="text-lg sm:text-xl font-bold text-gray-900">
+            EMI Calculator
           </h2>
           <button 
             onClick={onClose}
             className="p-2 hover:bg-gray-100 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500"
             aria-label="Close modal"
           >
-            <X size={20} />
+            <X size={18} className="sm:w-5 sm:h-5" />
           </button>
         </div>
 
-        <div className="p-6 space-y-6">
+        <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+          {/* Loan Amount Slider */}
           <div>
             <div className="flex justify-between items-center mb-2">
-              <label className="text-gray-700 font-medium">Loan Amount</label>
-              <span className="text-purple-600 font-bold">₹ {loanAmount.toLocaleString('en-IN')}</span>
+              <label className="text-gray-700 font-medium text-sm sm:text-base">Loan Amount</label>
+              <span className="text-purple-600 font-bold text-sm sm:text-base">
+                ₹ {loanAmount.toLocaleString('en-IN')}
+              </span>
             </div>
             <input
               type="range"
@@ -256,16 +262,19 @@ const EMICalculatorModal = ({ onClose }) => {
               }}
               aria-label="Loan amount slider"
             />
-            <div className="flex justify-between text-gray-500 text-sm mt-1">
+            <div className="flex justify-between text-gray-500 text-xs sm:text-sm mt-1">
               <span>₹ 1L</span>
               <span>₹ 13.26L</span>
             </div>
           </div>
 
+          {/* Down Payment Slider */}
           <div>
             <div className="flex justify-between items-center mb-2">
-              <label className="text-gray-700 font-medium">Down Payment</label>
-              <span className="text-purple-600 font-bold">₹ {downPayment.toLocaleString('en-IN')}</span>
+              <label className="text-gray-700 font-medium text-sm sm:text-base">Down Payment</label>
+              <span className="text-purple-600 font-bold text-sm sm:text-base">
+                ₹ {downPayment.toLocaleString('en-IN')}
+              </span>
             </div>
             <input
               type="range"
@@ -280,16 +289,17 @@ const EMICalculatorModal = ({ onClose }) => {
               }}
               aria-label="Down payment slider"
             />
-            <div className="flex justify-between text-gray-500 text-sm mt-1">
+            <div className="flex justify-between text-gray-500 text-xs sm:text-sm mt-1">
               <span>₹ 0</span>
               <span>₹ 12.26L</span>
             </div>
           </div>
 
+          {/* Interest Rate Slider */}
           <div>
             <div className="flex justify-between items-center mb-2">
-              <label className="text-gray-700 font-medium">Interest Rate</label>
-              <span className="text-purple-600 font-bold">{interestRate}%</span>
+              <label className="text-gray-700 font-medium text-sm sm:text-base">Interest Rate</label>
+              <span className="text-purple-600 font-bold text-sm sm:text-base">{interestRate}%</span>
             </div>
             <input
               type="range"
@@ -304,16 +314,17 @@ const EMICalculatorModal = ({ onClose }) => {
               }}
               aria-label="Interest rate slider"
             />
-            <div className="flex justify-between text-gray-500 text-sm mt-1">
+            <div className="flex justify-between text-gray-500 text-xs sm:text-sm mt-1">
               <span>6%</span>
               <span>15%</span>
             </div>
           </div>
 
+          {/* Loan Duration Slider */}
           <div>
             <div className="flex justify-between items-center mb-2">
-              <label className="text-gray-700 font-medium">Loan Duration</label>
-              <span className="text-purple-600 font-bold">{loanDuration} Months</span>
+              <label className="text-gray-700 font-medium text-sm sm:text-base">Loan Duration</label>
+              <span className="text-purple-600 font-bold text-sm sm:text-base">{loanDuration} Months</span>
             </div>
             <input
               type="range"
@@ -327,66 +338,50 @@ const EMICalculatorModal = ({ onClose }) => {
               }}
               aria-label="Loan duration slider"
             />
-            <div className="flex justify-between text-gray-500 text-sm mt-1">
+            <div className="flex justify-between text-gray-500 text-xs sm:text-sm mt-1">
               <span>1 Year</span>
               <span>7 Years</span>
             </div>
           </div>
 
-          {/* Enhanced results display */}
-          <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-4 space-y-3">
+          {/* Mobile-optimized results display */}
+          <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-3 sm:p-4 space-y-3">
             <div className="text-center">
-              <div className="text-3xl font-bold text-green-600 mb-1">
+              <div className="text-2xl sm:text-3xl font-bold text-green-600 mb-1">
                 ₹{monthlyEMI.toLocaleString('en-IN')}
               </div>
               <div className="text-gray-600 text-sm">Monthly EMI</div>
             </div>
             
-            <div className="grid grid-cols-2 gap-4 text-sm">
+            <div className="grid grid-cols-2 gap-2 sm:gap-4 text-sm">
               <div className="text-center">
-                <div className="font-semibold text-gray-800">
+                <div className="font-semibold text-gray-800 text-sm sm:text-base">
                   ₹{(loanAmount - downPayment).toLocaleString('en-IN')}
                 </div>
-                <div className="text-gray-600">Principal</div>
+                <div className="text-gray-600 text-xs sm:text-sm">Principal</div>
               </div>
               <div className="text-center">
-                <div className="font-semibold text-gray-800">
+                <div className="font-semibold text-gray-800 text-sm sm:text-base">
                   ₹{calculateTotalInterest().toLocaleString('en-IN')}
                 </div>
-                <div className="text-gray-600">Total Interest</div>
+                <div className="text-gray-600 text-xs sm:text-sm">Total Interest</div>
               </div>
             </div>
           </div>
-
-          {/* <div className="space-y-3">
-            <button className="w-full text-purple-600 font-medium py-2 flex items-center justify-center gap-2 hover:bg-purple-50 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500">
-              <BarChart3 size={16} />
-              View Detailed Breakup
-            </button>
-
-            <button className="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 px-6 rounded-xl font-semibold transition-all flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">
-              <span className="bg-yellow-400 text-purple-600 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">₹</span>
-              Check Eligibility & Apply
-            </button>
-          </div> */}
-
-          {/* <div className="text-xs text-gray-500 space-y-1">
-            <p>*Interest rates vary based on credit profile and bank policies.</p>
-            <p>**Processing fees and additional charges not included in calculation.</p>
-          </div> */}
         </div>
       </div>
     </div>
   );
 };
 
-// Main component simplified to core requirements
+// Main responsive component
 export default function App() {
   const [showEMICalculator, setShowEMICalculator] = useState(false);
   const [invites, setInvites] = useState(100);
   const [duration, setDuration] = useState(7);
   const [calculatedValue, setCalculatedValue] = useState(0);
   const [is360View, setIs360View] = useState(true);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const carData = useMemo(() => ({
     model: "BMW X5 M Sport",
@@ -415,12 +410,24 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-900">
+      {/* Mobile-first responsive header */}
       <header className="bg-black/20 backdrop-blur-md border-b border-white/10 sticky top-0 z-40">
-        <div className="container mx-auto px-6 py-4">
+        <div className="container mx-auto px-4 sm:px-6 py-3 sm:py-4">
           <div className="flex items-center justify-between">
-            <div className="text-2xl font-bold text-white">
+            <div className="text-xl sm:text-2xl font-bold text-white">
               <span className="text-blue-400">Alpha</span>Cars
             </div>
+            
+            {/* Mobile menu button */}
+            <button 
+              className="md:hidden p-2 text-white hover:text-blue-400 transition-colors"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle mobile menu"
+            >
+              <Menu size={24} />
+            </button>
+
+            {/* Desktop navigation */}
             <nav className="hidden md:flex space-x-6">
               <a href="#" className="text-white/80 hover:text-white transition-colors">Home</a>
               <a href="#" className="text-white/80 hover:text-white transition-colors">Cars</a>
@@ -429,18 +436,30 @@ export default function App() {
               <a href="#" className="text-white/80 hover:text-white transition-colors">Contact</a>
             </nav>
           </div>
+          
+          {/* Mobile navigation menu */}
+          {mobileMenuOpen && (
+            <nav className="md:hidden mt-4 pb-4 space-y-2">
+              <a href="#" className="block text-white/80 hover:text-white transition-colors py-2">Home</a>
+              <a href="#" className="block text-white/80 hover:text-white transition-colors py-2">Cars</a>
+              <a href="#" className="block text-white/80 hover:text-white transition-colors py-2">Finance</a>
+              <a href="#" className="block text-white/80 hover:text-white transition-colors py-2">About</a>
+              <a href="#" className="block text-white/80 hover:text-white transition-colors py-2">Contact</a>
+            </nav>
+          )}
         </div>
       </header>
 
-      <main className="container mx-auto px-6 py-8">
-        <div className="grid lg:grid-cols-2 gap-8">
-          {/* Left Column - 360 View & Controls */}
-          <div className="space-y-6">
+      {/* Mobile-first responsive main content */}
+      <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+          {/* Left Column - Mobile-optimized 360 View & Controls */}
+          <div className="space-y-4 sm:space-y-6">
             {is360View ? (
               <ImageCarousel images={75} basePath={basePath} />
             ) : (
-              <div className="relative bg-white/5 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/10">
-                <div className="relative h-96 overflow-hidden bg-gray-800">
+              <div className="relative bg-white/5 backdrop-blur-sm rounded-xl sm:rounded-2xl overflow-hidden border border-white/10">
+                <div className="relative h-64 sm:h-80 md:h-96 overflow-hidden bg-gray-800">
                   <ThreeSixty
                     amount={75}
                     imagePath={basePath}
@@ -454,70 +473,71 @@ export default function App() {
               </div>
             )}
 
-            {/* Simplified Control Buttons */}
-            <div className="grid grid-cols-2 gap-4">
+            {/* Mobile-optimized Control Buttons */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <button
                 onClick={() => setIs360View(prev => !prev)}
-                className="py-3 px-6 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 text-white focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
+                className="py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 text-white focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 text-sm sm:text-base"
               >
-                <RotateCcw size={20} />
+                <RotateCcw size={18} className="sm:w-5 sm:h-5" />
                 {is360View ? 'Auto View' : '360° View'}
               </button>
               
               <button
                 onClick={() => setShowEMICalculator(true)}
-                className="py-3 px-6 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-700 text-white focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-2"
+                className="py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-700 text-white focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-2 text-sm sm:text-base"
               >
-                <Calculator size={20} />
+                <Calculator size={18} className="sm:w-5 sm:h-5" />
                 EMI Calculator
               </button>
             </div>
           </div>
 
-          {/* Right Column - Car Details & Calculators */}
-          <div className="space-y-6">
-            {/* Car Overview */}
-            <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
-              <h1 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
-                <Car className="text-blue-400" />
-                {carData.model}
+          {/* Right Column - Mobile-optimized Car Details & Calculators */}
+          <div className="space-y-4 sm:space-y-6">
+            {/* Mobile-optimized Car Overview */}
+            <div className="bg-white/5 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-white/10">
+              <h1 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6 flex items-center gap-2">
+                <Car className="text-blue-400 w-5 h-5 sm:w-6 sm:h-6" />
+                <span className="break-words">{carData.model}</span>
               </h1>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                <div className="bg-white/5 rounded-lg p-4">
+              {/* Mobile-first grid layout */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6">
+                <div className="bg-white/5 rounded-lg p-3 sm:p-4">
                   <div className="flex items-center gap-2 mb-2">
-                    <Car size={18} className="text-blue-400" />
-                    <span className="text-white/60 text-sm">Model</span>
+                    <Car size={16} className="sm:w-5 sm:h-5 text-blue-400" />
+                    <span className="text-white/60 text-xs sm:text-sm">Model</span>
                   </div>
-                  <p className="text-white font-semibold text-sm">{carData.model}</p>
+                  <p className="text-white font-semibold text-sm sm:text-base break-words">{carData.model}</p>
                 </div>
-                <div className="bg-white/5 rounded-lg p-4">
+                <div className="bg-white/5 rounded-lg p-3 sm:p-4">
                   <div className="flex items-center gap-2 mb-2">
-                    <Calendar size={18} className="text-green-400" />
-                    <span className="text-white/60 text-sm">Year</span>
+                    <Calendar size={16} className="sm:w-5 sm:h-5 text-green-400" />
+                    <span className="text-white/60 text-xs sm:text-sm">Year</span>
                   </div>
-                  <p className="text-white font-semibold">{carData.year}</p>
+                  <p className="text-white font-semibold text-sm sm:text-base">{carData.year}</p>
                 </div>
-                <div className="bg-white/5 rounded-lg p-4">
+                <div className="bg-white/5 rounded-lg p-3 sm:p-4">
                   <div className="flex items-center gap-2 mb-2">
-                    <Gauge size={18} className="text-orange-400" />
-                    <span className="text-white/60 text-sm">Mileage</span>
+                    <Gauge size={16} className="sm:w-5 sm:h-5 text-orange-400" />
+                    <span className="text-white/60 text-xs sm:text-sm">Mileage</span>
                   </div>
-                  <p className="text-white font-semibold">{carData.mileage}</p>
+                  <p className="text-white font-semibold text-sm sm:text-base">{carData.mileage}</p>
                 </div>
-                <div className="bg-white/5 rounded-lg p-4">
+                <div className="bg-white/5 rounded-lg p-3 sm:p-4">
                   <div className="flex items-center gap-2 mb-2">
-                    <DollarSign size={18} className="text-yellow-400" />
-                    <span className="text-white/60 text-sm">Price</span>
+                    <DollarSign size={16} className="sm:w-5 sm:h-5 text-yellow-400" />
+                    <span className="text-white/60 text-xs sm:text-sm">Price</span>
                   </div>
-                  <p className="text-white font-semibold">{carData.price}</p>
+                  <p className="text-white font-semibold text-sm sm:text-base">{carData.price}</p>
                 </div>
               </div>
               
-              <div className="space-y-4">
-                <div className="p-4 bg-white/5 rounded-lg">
-                  <p className="text-green-400 text-sm font-medium mb-2">{carData.condition}</p>
-                  <div className="grid grid-cols-2 gap-2 text-xs text-white/70">
+              <div className="space-y-3 sm:space-y-4">
+                <div className="p-3 sm:p-4 bg-white/5 rounded-lg">
+                  <p className="text-green-400 text-xs sm:text-sm font-medium mb-2">{carData.condition}</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 sm:gap-2 text-xs text-white/70">
                     <p>Variant: {carData.variant}</p>
                     <p>Tyre Front: {carData.tyreFront}</p>
                     <p>Tyre Rear: {carData.tyreRear}</p>
@@ -525,9 +545,9 @@ export default function App() {
                   </div>
                 </div>
 
-                <div className="p-4 bg-white/5 rounded-lg">
-                  <h3 className="text-white font-medium mb-2">Key Features</h3>
-                  <div className="flex flex-wrap gap-2">
+                <div className="p-3 sm:p-4 bg-white/5 rounded-lg">
+                  <h3 className="text-white font-medium mb-2 text-sm sm:text-base">Key Features</h3>
+                  <div className="flex flex-wrap gap-1.5 sm:gap-2">
                     {carData.features.map((feature, index) => (
                       <span 
                         key={index}
@@ -541,16 +561,16 @@ export default function App() {
               </div>
             </div>
 
-            {/* Event Price Calculator */}
-            <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
-              <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                <Calculator className="text-purple-400" />
-                Event Pricing Calculator
+            {/* Mobile-optimized Event Price Calculator */}
+            <div className="bg-white/5 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-white/10">
+              <h3 className="text-lg sm:text-xl font-bold text-white mb-4 sm:mb-6 flex items-center gap-2">
+                <Calculator className="text-purple-400 w-5 h-5 sm:w-6 sm:h-6" />
+                <span className="text-sm sm:text-xl">Event Pricing Calculator</span>
               </h3>
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 <div>
-                  <label className="flex items-center gap-2 text-white/80 text-sm mb-2">
-                    <Users size={16} className="text-blue-400" />
+                  <label className="flex items-center gap-2 text-white/80 text-xs sm:text-sm mb-2">
+                    <Users size={14} className="sm:w-4 sm:h-4 text-blue-400" />
                     Number of Invites
                   </label>
                   <input
@@ -564,7 +584,7 @@ export default function App() {
                       background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${((invites - 50) / (500 - 50)) * 100}%, rgba(255,255,255,0.2) ${((invites - 50) / (500 - 50)) * 100}%, rgba(255,255,255,0.2) 100%)`
                     }}
                   />
-                  <div className="flex justify-between text-white/60 text-sm mt-1">
+                  <div className="flex justify-between text-white/60 text-xs mt-1">
                     <span>50</span>
                     <span className="font-semibold text-white">{invites}</span>
                     <span>500</span>
@@ -572,8 +592,8 @@ export default function App() {
                 </div>
 
                 <div>
-                  <label className="flex items-center gap-2 text-white/80 text-sm mb-2">
-                    <Clock size={16} className="text-green-400" />
+                  <label className="flex items-center gap-2 text-white/80 text-xs sm:text-sm mb-2">
+                    <Clock size={14} className="sm:w-4 sm:h-4 text-green-400" />
                     Duration of Event (days)
                   </label>
                   <input
@@ -587,17 +607,18 @@ export default function App() {
                       background: `linear-gradient(to right, #10b981 0%, #10b981 ${((duration - 1) / (30 - 1)) * 100}%, rgba(255,255,255,0.2) ${((duration - 1) / (30 - 1)) * 100}%, rgba(255,255,255,0.2) 100%)`
                     }}
                   />
-                  <div className="flex justify-between text-white/60 text-sm mt-1">
+                  <div className="flex justify-between text-white/60 text-xs mt-1">
                     <span>1 day</span>
                     <span className="font-semibold text-white">{duration} days</span>
                     <span>30 days</span>
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-lg p-4 mt-6 border border-purple-400/30">
+                {/* Mobile-optimized result display */}
+                <div className="bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-lg p-3 sm:p-4 mt-4 sm:mt-6 border border-purple-400/30">
                   <div className="text-center">
-                    <p className="text-white/80 text-sm mb-1">Calculated Event Price</p>
-                    <p className="text-3xl font-bold text-white">
+                    <p className="text-white/80 text-xs sm:text-sm mb-1">Calculated Event Price</p>
+                    <p className="text-2xl sm:text-3xl font-bold text-white">
                       ₹{calculatedValue.toLocaleString('en-IN')}
                     </p>
                     <p className="text-white/60 text-xs mt-1">
@@ -612,13 +633,13 @@ export default function App() {
               </div>
             </div>
 
-            {/* Simple Get Quote Button */}
-            {/* <div className="w-full">
-              <button className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 px-6 rounded-xl font-semibold transition-all flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2">
-                <DollarSign size={20} />
+            {/* Mobile-optimized Get Quote Button */}
+            <div className="w-full">
+              <button className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg sm:rounded-xl font-semibold transition-all flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 text-sm sm:text-base">
+                <DollarSign size={18} className="sm:w-5 sm:h-5" />
                 Get Quote
               </button>
-            </div> */}
+            </div>
           </div>
         </div>
       </main>
